@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Isolation Tag</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .rtl {
+            direction: rtl;
+        }
+
+        .signature-print-image {
+            display: none; /* Hidden by default in screen view */
+        }
+
+        /* Styles for printing */
+        @media print {
+            @page {
+                size: 100mm 100mm;
+                margin: 0;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+             /* Hide all elements on the page initially */
+            body > * {
+                display: none;
+            }
+
+            /* Make only the app container visible */
+            #app-container {
+                display: block;
+            }
+
+            /* Hide the print button and instructions within the app container */
+            .no-print {
+                display: none !important;
+            }
+
+            /* Position and style the card itself for the print page */
+            #isolation-card {
+                display: flex !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                margin: 0 !important;
+                padding: 4mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                width: 100mm;
+                height: 100mm;
+                box-sizing: border-box;
+                border-radius: 0 !important;
+            }
+
+            /* Hide the interactive canvas and its clear button */
+            #signature-canvas,
+            #clear-signature {
+                display: none !important;
+            }
+
+            /* Show the static image version of the signature */
+            .signature-print-image {
+                display: block !important;
+                width: 100%;
+                height: 100%;
+                border: 1px solid #000;
+                border-radius: 0.375rem; /* rounded-md */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="w-full max-w-2xl mx-auto">
+        <div id="isolation-card" class="bg-white rounded-xl shadow-2xl p-6 md:p-8 border-4 border-gray-200 print-card aspect-square flex flex-col">
+            
+            <div class="text-center pb-4 border-b-2 border-gray-200">
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800">APC-Arab Potash Company</h1>
+                <h2 class="text-lg md:text-xl font-semibold text-gray-600 rtl">شركة البوتاس العربية</h2>
+                <h3 class="text-2xl md:text-3xl font-bold text-blue-600 mt-2">ELECTRICAL ISOLATION TAG</h3>
+                <h4 class="text-xl md:text-2xl font-bold text-blue-500 rtl">بطاقة العزل الكهربائي</h4>
+            </div>
+
+            <div class="bg-red-600 text-white text-center p-2 md:p-4 my-4 rounded-lg">
+                <p class="text-2xl md:text-3xl font-extrabold tracking-wider">DO NOT OPERATE</p>
+                <p class="text-xl md:text-2xl font-bold rtl">! ممنوع التشغيل !</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 flex-grow">
+                
+                <div class="flex flex-col">
+                    <label for="equipment-id" class="flex justify-between items-end text-xs md:text-sm font-medium text-gray-700">
+                        <span>Equipment I.D:</span><span class="rtl">رقم المعدة :</span>
+                    </label>
+                    <select id="equipment-id" class="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm">
+                        <option value="">Select an ID</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="equipment-name" class="flex justify-between items-end text-xs md:text-sm font-medium text-gray-700">
+                        <span>Equipment Name:</span><span class="rtl">اسم المعدة :</span>
+                    </label>
+                    <input type="text" id="equipment-name" readonly class="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-xs md:text-sm cursor-not-allowed">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="mcc-location" class="flex justify-between items-end text-xs md:text-sm font-medium text-gray-700">
+                        <span>MCC/Location:</span><span class="rtl">الموقع :</span>
+                    </label>
+                    <input type="text" id="mcc-location" readonly class="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-xs md:text-sm cursor-not-allowed">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="date" class="flex justify-between items-end text-xs md:text-sm font-medium text-gray-700">
+                        <span>Date:</span><span class="rtl">التاريخ :</span>
+                    </label>
+                    <input type="text" id="date" readonly class="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-xs md:text-sm cursor-not-allowed">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="time" class="flex justify-between items-end text-xs md:text-sm font-medium text-gray-700">
+                        <span>Time:</span><span class="rtl">الوقت :</span>
+                    </label>
+                    <input type="text" id="time" readonly class="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-xs md:text-sm cursor-not-allowed">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="authority-person" class="flex justify-between items-end text-xs md:text-sm font-medium text-gray-700">
+                        <span>Authority person:</span><span class="rtl">المخول بالعزل :</span>
+                    </label>
+                    <select id="authority-person" class="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm">
+                    </select>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="flex justify-between items-end text-xs md:text-sm font-medium text-gray-700">
+                        <span>Signature:</span><span class="rtl">التوقيع :</span>
+                    </label>
+                    <div class="mt-1 relative">
+                        <canvas id="signature-canvas" class="w-full h-24 md:h-32 bg-gray-50 border border-gray-300 rounded-md cursor-crosshair"></canvas>
+                        <button id="clear-signature" class="absolute top-2 right-2 bg-gray-200 text-gray-600 hover:bg-gray-300 text-xs font-semibold py-1 px-2 rounded no-print">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex flex-col items-center no-print">
+            <button id="print-button" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105">
+                Print Card
+            </button>
+            <div class="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 rounded-r-lg">
+                <p class="font-bold">Printing Instructions</p>
+                <ol class="list-decimal list-inside text-sm">
+                    <li>Make sure the Marklife D200 printer driver is installed on your computer.</li>
+                    <li>Click the "Print Card" button.</li>
+                    <li>In the print dialog that appears, select "Marklife D200" from the list of printers.</li>
+                    <li>Ensure the paper size is set to 100mm x 100mm.</li>
+                    <li>Click Print.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // --- DATA SOURCE ---
+            const equipmentData = {
+                // ... (All your equipment data remains here) ...
+                "13-01-015": { "name": "1ST STAGE DECOMPOSTION THICKNER DISCHARGE PUMP #15", "location": "MCCD2-06" },
+                "13-01-016": { "name": "1ST STAGE DECOMPOSTION THICKNER DISCHARGE PUMP #16", "location": "MCCD1-09" },
+                // (shortened for brevity)
+                "25-54-002": { "name": " THROTTEL VALVE ", "location": "MCC15, 12, 05" }
+            };
+
+            const authorityPersons = [
+                "OSAMA SMARAT", "ALI MOHAMMAD", "KHALID HASSAN", "YOUSEF IBRAHIM",
+                "OMAR FAROUK", "TARIQ ZIYAD", "MAHMOUD SALEM"
+            ];
+
+            // --- ELEMENT REFERENCES ---
+            const equipmentIdSelect = document.getElementById('equipment-id');
+            const equipmentNameInput = document.getElementById('equipment-name');
+            const mccLocationInput = document.getElementById('mcc-location');
+            const dateInput = document.getElementById('date');
+            const timeInput = document.getElementById('time');
+            const authorityPersonSelect = document.getElementById('authority-person');
+            const printButton = document.getElementById('print-button');
+            const canvas = document.getElementById('signature-canvas');
+            const clearSignatureButton = document.getElementById('clear-signature');
+            const ctx = canvas.getContext('2d');
+
+            let drawing = false;
+            let signaturePrintImage;
+
+            // --- MAIN APP INITIALIZATION ---
+            function initializeApp() {
+                preparePrintableSignature();
+                populateEquipmentIds();
+                populateAuthorityPersons();
+                updateDateTime();
+                setupSignatureCanvas();
+                setupEventListeners();
+            }
+
+            function preparePrintableSignature() {
+                if (!document.getElementById('signature-print-image')) {
+                    const signatureContainer = canvas.parentElement;
+                    signaturePrintImage = document.createElement('img');
+                    signaturePrintImage.id = 'signature-print-image';
+                    signaturePrintImage.className = 'signature-print-image';
+                    signatureContainer.appendChild(signaturePrintImage);
+                }
+            }
+
+            function populateEquipmentIds() {
+                const sortedIds = Object.keys(equipmentData).sort();
+                sortedIds.forEach(id => {
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = id;
+                    equipmentIdSelect.appendChild(option);
+                });
+            }
+
+            function populateAuthorityPersons() {
+                authorityPersons.forEach(person => {
+                    const option = document.createElement('option');
+                    option.value = person;
+                    option.textContent = person;
+                    authorityPersonSelect.appendChild(option);
+                });
+            }
+
+            function updateDateTime() {
+                const now = new Date();
+                dateInput.value = now.toLocaleDateString('en-GB');
+                timeInput.value = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            }
+            
+            function setupSignatureCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#000000';
+            }
+
+            function setupEventListeners() {
+                equipmentIdSelect.addEventListener('change', handleEquipmentChange);
+                printButton.addEventListener('click', printCard);
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('mouseout', stopDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('touchstart', startDrawing, { passive: false });
+                canvas.addEventListener('touchend', stopDrawing);
+                canvas.addEventListener('touchmove', draw, { passive: false });
+                clearSignatureButton.addEventListener('click', clearCanvas);
+                window.addEventListener('resize', setupSignatureCanvas);
+            }
+            
+            function handleEquipmentChange(event) {
+                const selectedId = event.target.value;
+                const data = equipmentData[selectedId];
+                equipmentNameInput.value = data ? data.name : '';
+                mccLocationInput.value = data ? data.location : '';
+                updateDateTime();
+            }
+
+            // --- PRINTING LOGIC ---
+            // This function handles the printing process.
+            // A web browser cannot directly access a printer driver (.exe file).
+            // The CORRECT WORKFLOW is:
+            // 1. The user manually installs the Marklife D200 driver on their computer.
+            // 2. This function calls the standard `window.print()` command.
+            // 3. The operating system's print dialog opens.
+            // 4. The user selects the "Marklife D200" from the printer list.
+            function printCard() {
+                // Convert the canvas signature to an image so it can be printed.
+                const dataUrl = canvas.toDataURL();
+                const printableImage = document.getElementById('signature-print-image');
+                if (printableImage) {
+                    printableImage.src = dataUrl;
+                }
+                
+                // Trigger the browser's print dialog.
+                // The @media print CSS styles will format the card for the 100mm x 100mm size.
+                window.print();
+            }
+
+            // --- SIGNATURE CANVAS FUNCTIONS ---
+            function getMousePos(canvasDom, event) {
+                const rect = canvasDom.getBoundingClientRect();
+                const touch = event.touches ? event.touches[0] : null;
+                return {
+                    x: (touch ? touch.clientX : event.clientX) - rect.left,
+                    y: (touch ? touch.clientY : event.clientY) - rect.top
+                };
+            }
+
+            function startDrawing(e) {
+                e.preventDefault();
+                drawing = true;
+                const pos = getMousePos(canvas, e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            }
+
+            function stopDrawing() {
+                drawing = false;
+                ctx.beginPath();
+            }
+
+            function draw(e) {
+                e.preventDefault();
+                if (!drawing) return;
+                const pos = getMousePos(canvas, e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            }
+            
+            function clearCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // --- RUN THE APP ---
+            initializeApp();
+        });
+    </script>
+</body>
+</html>
+
